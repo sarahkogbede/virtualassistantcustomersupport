@@ -15,11 +15,13 @@ import { getStoredImage } from '../utils/imageStorage';
 
 export const Hero: React.FC = () => {
   const [headshot, setHeadshot] = useState<string | null>(null);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     setHeadshot(getStoredImage('headshot_primary'));
     const handleUpdate = () => {
       setHeadshot(getStoredImage('headshot_primary'));
+      setImgError(false);
     };
     window.addEventListener('portfolio_image_updated', handleUpdate);
     return () => window.removeEventListener('portfolio_image_updated', handleUpdate);
@@ -150,12 +152,13 @@ export const Hero: React.FC = () => {
           {/* Right Column: Refined, Balanced Static Headshot */}
           <div className="lg:col-span-4 flex justify-center">
             <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm max-w-[240px] w-full flex flex-col items-center">
-              {headshot ? (
+              {headshot && !imgError ? (
                 <div className="w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-xs">
                   <img
                     src={headshot}
                     alt="Sarah Kogbede"
                     className="w-full h-full object-cover object-top"
+                    onError={() => setImgError(true)}
                   />
                 </div>
               ) : (

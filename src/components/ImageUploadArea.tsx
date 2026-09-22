@@ -29,6 +29,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
   allowEnlarge = true
 }) => {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [hasLoadError, setHasLoadError] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -36,6 +37,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
     const loadImg = () => {
       const img = getStoredImage(storageKey);
       setCurrentImage(img);
+      setHasLoadError(false);
     };
     loadImg();
 
@@ -54,20 +56,21 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
 
   // If used in compact mode (e.g. avatar or thumbnail badge)
   if (compact) {
-    if (!currentImage) return null;
+    if (!currentImage || hasLoadError) return null;
     return (
       <div className={`relative inline-flex items-center ${className}`}>
         <img
           src={currentImage}
           alt="Portfolio Asset"
           className="w-10 h-10 rounded-full object-cover border border-slate-200"
+          onError={() => setHasLoadError(true)}
         />
       </div>
     );
   }
 
   // If no image has been uploaded for this asset, do not display placeholder boxes or mockups
-  if (!currentImage) {
+  if (!currentImage || hasLoadError) {
     return null;
   }
 
@@ -98,6 +101,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
           className={`w-full h-full ${
             objectFit === 'cover' ? 'object-cover' : 'object-contain'
           } bg-white transition duration-300 group-hover:scale-[1.01]`}
+          onError={() => setHasLoadError(true)}
         />
 
         {allowEnlarge && (

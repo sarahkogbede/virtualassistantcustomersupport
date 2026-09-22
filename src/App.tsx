@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -13,8 +13,14 @@ import { CallToAction } from './components/CallToAction';
 import { ContactSection } from './components/ContactSection';
 import { FinalCTA } from './components/FinalCTA';
 import { Footer } from './components/Footer';
+import { syncAllLocalStorageImagesToServer } from './utils/imageStorage';
 
 export default function App() {
+  useEffect(() => {
+    // Automatically write any browser-uploaded images to disk in public/images
+    syncAllLocalStorageImagesToServer();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FAFAF9] text-[#0F172A] flex flex-col font-sans selection:bg-[#2563EB] selection:text-white">
       {/* Sticky Header Navigation */}
