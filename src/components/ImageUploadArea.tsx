@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { getStoredImage } from '../utils/imageStorage';
 
@@ -28,31 +28,10 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
   objectFit = 'contain',
   allowEnlarge = true
 }) => {
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const currentImage = getStoredImage(storageKey);
   const [hasLoadError, setHasLoadError] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-
-  useEffect(() => {
-    const loadImg = () => {
-      const img = getStoredImage(storageKey);
-      setCurrentImage(img);
-      setHasLoadError(false);
-    };
-    loadImg();
-
-    const handleCustomUpdate = (e: Event) => {
-      const customEvent = e as CustomEvent<{ key: string }>;
-      if (!customEvent.detail || customEvent.detail.key === storageKey) {
-        loadImg();
-      }
-    };
-
-    window.addEventListener('portfolio_image_updated', handleCustomUpdate);
-    return () => {
-      window.removeEventListener('portfolio_image_updated', handleCustomUpdate);
-    };
-  }, [storageKey]);
 
   // If used in compact mode (e.g. avatar or thumbnail badge)
   if (compact) {

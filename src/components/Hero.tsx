@@ -11,21 +11,11 @@ import {
   Briefcase 
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { getStoredImage } from '../utils/imageStorage';
+import headshotImg from '../assets/images/headshot.jpg';
 
 export const Hero: React.FC = () => {
-  const [headshot, setHeadshot] = useState<string | null>(null);
   const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    setHeadshot(getStoredImage('headshot_primary'));
-    const handleUpdate = () => {
-      setHeadshot(getStoredImage('headshot_primary'));
-      setImgError(false);
-    };
-    window.addEventListener('portfolio_image_updated', handleUpdate);
-    return () => window.removeEventListener('portfolio_image_updated', handleUpdate);
-  }, []);
+  const headshot = headshotImg;
 
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
